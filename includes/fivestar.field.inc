@@ -52,7 +52,7 @@ function fivestar_form_field_ui_field_edit_form_alter(&$form, $form_state) {
  * Implementation of hook_field_settings_form().
  */
 function fivestar_field_settings_form($field, $instance) {
-  // Fivestar fields are automatically assigned a voting category matching their field name,
+  // Fivestar fields are automatically assigned a voting category, $tag, matching their field name,
   // minus the 'field_' prefix. 
   // Note: There is no scenario where (a) axis should not be set or (b)  where the axis should be anything 
   // other than the field name. But I'm not 100% sure this will not cause problems for legacy sites running on the
@@ -458,6 +458,12 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
               && $display['type'] == 'fivestar_formatter_default'
               && $display['settings']['expose']) ? TRUE : FALSE;
   if ($is_form) {
+    // Fivestar fields are automatically assigned a voting category, $tag, matching their field name,
+    // minus the 'field_' prefix. 
+    // Note: There is no scenario where (a) axis should not be set or (b)  where the axis should be anything 
+    // other than the field name. But I'm not 100% sure this will not cause problems for legacy sites running on the
+    // pre-release 7.x-2.x branch of Fivestar. Just in case, check if axis has been set and provide the field name
+    // as a default to fall back on. (bryanhirsch, 8/11/11)
     $tag = (isset($field['settings']['axis'])) ? $field['settings']['axis'] : substr($field['field_name'], 6);
     list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     $settings = _fivestar_custom_widget_settings($entity_type, $instance, $display, $id, $tag, $widget);
@@ -590,7 +596,7 @@ function _fivestar_custom_widget_settings($entity_type, $instance, $display, $id
  */
 function fivestar_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   foreach ($entities as $id => $entity) {
-    // Fivestar fields are automatically assigned a voting category matching their field name,
+    // Fivestar fields are automatically assigned a voting category, $tag, matching their field name,
     // minus the 'field_' prefix. 
     // Note: There is no scenario where (a) axis should not be set or (b)  where the axis should be anything 
     // other than the field name. But I'm not 100% sure this will not cause problems for legacy sites running on the
