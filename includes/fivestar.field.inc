@@ -52,14 +52,19 @@ function fivestar_form_field_ui_field_edit_form_alter(&$form, $form_state) {
  * Implementation of hook_field_settings_form().
  */
 function fivestar_field_settings_form($field, $instance) {
+  // Fivestar fields are automatically assigned a voting category matching their field name,
+  // minus the 'field_' prefix. 
+  // Note: There is no scenario where (a) axis should not be set or (b)  where the axis should be anything 
+  // other than the field name. But I'm not 100% sure this will not cause problems for legacy sites running on the
+  // pre-release 7.x-2.x branch of Fivestar. Just in case, check if axis has been set and provide the field name
+  // as a default to fall back on. (bryanhirsch, 8/11/11)
+  $axis = substr($field['field_name'], 6);
   $form['axis'] = array(
-    '#type' => 'select',
-    '#required' => TRUE,
+    '#type' => 'textfield',
     '#title' => 'Voting Tag',
-    '#options' => fivestar_get_tags(),
-    '#description' => t('The tag this rating will affect. Enter a property on which that this rating will affect, such as <em>quality</em>, <em>satisfaction</em>, <em>overall</em>, etc.'),
-    '#default_value' => isset($field['settings']['axis']) ? $field['settings']['axis'] : '',
-    '#disabled' => field_has_data($field),
+    '#disabled' => TRUE,
+    '#value' => $axis,
+    '#description' => t('Fivestar fields automatically create a corresponding "voting tag". This is only relevant if you are using other Drupal voting modules to collect votes about the same thing.'),
   );
 
   return $form;
@@ -453,9 +458,7 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
               && $display['type'] == 'fivestar_formatter_default'
               && $display['settings']['expose']) ? TRUE : FALSE;
   if ($is_form) {
-    // TODO. Get rid of voting categories setting, then change this so
-    // axis = field name.
-    $tag = (isset($field['settings']['axis'])) ? $field['settings']['axis'] : 'vote';
+    $tag = (isset($field['settings']['axis'])) ? $field['settings']['axis'] : substr($field['field_name'], 6);
     list($id, $vid, $bundle) = entity_extract_ids($entity_type, $entity);
     $settings = _fivestar_custom_widget_settings($entity_type, $instance, $display, $id, $tag, $widget);
     $element[0] = drupal_get_form('fivestar_custom_widget', $values, $settings);
@@ -587,9 +590,13 @@ function _fivestar_custom_widget_settings($entity_type, $instance, $display, $id
  */
 function fivestar_field_prepare_view($entity_type, $entities, $field, $instances, $langcode, &$items) {
   foreach ($entities as $id => $entity) {
-    // TODO. Get rid of voting categories setting, then change this so
-    // axis = field name.
-    $tag = $field['settings']['axis'];
+    // Fivestar fields are automatically assigned a voting category matching their field name,
+    // minus the 'field_' prefix. 
+    // Note: There is no scenario where (a) axis should not be set or (b)  where the axis should be anything 
+    // other than the field name. But I'm not 100% sure this will not cause problems for legacy sites running on the
+    // pre-release 7.x-2.x branch of Fivestar. Just in case, check if axis has been set and provide the field name
+    // as a default to fall back on. (bryanhirsch, 8/11/11)
+    $tag = (isset($field['settings']['axis'])) ? $field['settings']['axis'] : substr($field['field_name'], 6);
     $votes = fivestar_get_votes($entity_type, $id, $tag);
     $values['user'] = isset($votes['user']['value']) ? $votes['user']['value'] : 0;
     $values['average'] = isset($votes['average']['value']) ? $votes['average']['value'] : 0;
