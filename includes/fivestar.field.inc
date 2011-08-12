@@ -67,7 +67,7 @@ function fivestar_field_instance_settings_form($field, $instance) {
   
   $form['allow_clear'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Allow users to undo their votes.'),
+    '#title' => t('Allow users to cancel their ratings.'),
     '#default_value' => isset($instance['settings']['allow_clear']) ? $instance['settings']['allow_clear'] : FALSE,
     '#return_value' => 1,
   );
@@ -189,7 +189,7 @@ function fivestar_field_widget_settings_form($field, $instance) {
     $form['widget'] = array(
       '#tree' => TRUE,
       '#type' => 'fieldset',
-      '#title' => t('Style options'),
+      '#title' => t('Star display options'),
       '#description' => t('Choose a style for your widget.'),
       '#weight' => -2,
       '#collapsible' => TRUE,
@@ -320,7 +320,7 @@ function fivestar_field_formatter_settings_form($field, $instance, $view_mode, $
   $element['widget'] = array(
     '#tree' => TRUE,
     '#type' => 'fieldset',
-    '#title' => t('Style options'),
+    '#title' => t('Star display options'),
     '#description' => t('Choose a style for your widget.'),
     '#weight' => -2,
     '#collapsible' => TRUE,
