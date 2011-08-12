@@ -11,8 +11,14 @@ form.fivestar-widget input {
 /* Combo Static and Rate Widget */
 .fivestar-combo-stars .fivestar-static-form-item {
   float: left; /* RTL */
-  margin-right: 40px; /* RTL */
+  margin-right: 40px; /* RTL */ 
+  margin-left: 40px; /* RTL */ 
 }
+.fivestar-combo-stars .fivestar-static-item {
+  float: left; /* RTL */
+  margin-right: 40px; /* RTL */ 
+}
+
 .fivestar-combo-stars .fivestar-form-item {
   float: left; /* RTL */
 }

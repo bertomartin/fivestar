@@ -333,7 +333,6 @@ function fivestar_fivestar_widgets() {
 function fivestar_custom_widget($form, &$form_state, $values, $settings) {
   $form = array(
     '#attributes' => array('class' => array('fivestar-widget')),
-    '#theme' => 'fivestar_widget',
   );
   $form['#submit'][] = 'fivestar_form_submit';
 
@@ -459,13 +458,11 @@ function fivestar_expand($element) {
     '#required' => $element['#required'],
     '#theme' => 'fivestar_select',
     '#default_value' => _fivestar_get_element_default_value($element),
+    '#weight' => -2,
   );
 
   if (isset($element['#parents'])) {
     $element['vote']['#parents'] = $element['#parents'];
-  }
-  if (isset($element['#weight'])) {
-    $element['vote']['#weight'] = $element['#weight'];
   }
 
   switch ($settings['text']) {
