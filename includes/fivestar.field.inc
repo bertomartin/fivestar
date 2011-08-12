@@ -26,25 +26,10 @@ function fivestar_form_field_ui_field_edit_form_alter(&$form, $form_state) {
     // Multiple values is not supported with Fivestar.
     $form['field']['cardinality']['#access'] = FALSE;
     $form['field']['cardinality']['#value'] = 1;
-
-   // If the widget type is exposed setting a default value has no purpose.
-   // The fieldset is removed to unclutter the UI.
-   if ($form['instance']['widget']['type']['#value'] == 'exposed' ) {
-     $form['instance']['default_value_widget']['#access'] = FALSE;
-   }
-   elseif ($form['instance']['widget']['type']['#value'] == 'stars') {
-     // Use a select dropdown in the field form to reduce clutter and confusion.
-     $options = array(0 => t('No stars'));
-     for($i = 1; $i <= $instance['settings']['stars']; $i++) {
-       $percentage = ceil($i * 100 / $instance['settings']['stars']);
-       $options[$percentage] = format_plural($i, '1 star', '@count stars');
-     }
-     $form['instance']['default_value_widget'][$field['field_name']][LANGUAGE_NONE][0]['rating'] = array(
-       '#type' => 'select',
-       '#options' => $options,
-       '#default_value' => isset($instance['default_value'][0]['rating']) ? $instance['default_value'][0]['rating'] : NULL,
-     );
-   }
+    // Setting "default value" here is confusing and for all practical purposes
+    // with existing widgets provided by fivestar (and anything else available 
+    // in contrib) meaningless.
+    $form['instance']['default_value_widget']['#access'] = FALSE;
   }
 }
 
@@ -233,7 +218,7 @@ function fivestar_previews_expand($element) {
       'css' => $css,
       'name' => strtolower($element[$css]['#title']),
     );
-    $element[$css]['#description'] = $element[$css]['#title'] .' '. t('preview') .':<br />'. theme('fivestar_preview_widget', $vars);
+    $element[$css]['#description'] = theme('fivestar_preview_widget', $vars);
   }
   
   return $element;
