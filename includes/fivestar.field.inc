@@ -359,8 +359,11 @@ function fivestar_field_formatter_settings_form($field, $instance, $view_mode, $
     $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view modes'];
     $bundles = field_info_bundles($instance['entity_type']);
     $element['expose'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Expose this Fivestar field for voting in the @display display on the @type type.', array('@display' => $view_modes[$view_mode]['label'], '@type' => $bundles[$instance['bundle']]['label'])),
+      '#type' => 'radios',
+      '#options' => array(
+        t('Disallow Fivestar voting on @display.', array('@display' => $view_modes[$view_mode]['label'], '@type' => $bundles[$instance['bundle']]['label'])),
+        t('Allow Fivestar voting on @display.', array('@display' => $view_modes[$view_mode]['label'], '@type' => $bundles[$instance['bundle']]['label'])),
+      ),
       '#default_value' => $settings['expose'],
       '#return_value' => 1
     );
