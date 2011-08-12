@@ -244,7 +244,6 @@ function fivestar_previews_expand($element) {
  */
 function fivestar_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
   $element['#tree'] = TRUE;
-
   if ($instance['widget']['type'] == 'select' || ($instance['widget']['type'] == 'stars' && isset($form['#title']) && $form['#title'] == 'Default value')) {
     $options = array(0 => t('No stars'));
     for($i = 1; $i <= $instance['settings']['stars']; $i++) {
@@ -263,7 +262,7 @@ function fivestar_field_widget_form(&$form, &$form_state, $field, $instance, $la
     $widgets = module_invoke_all('fivestar_widgets');
     $active = isset($instance['widget']['settings']['widget']['fivestar_widget']) ? $instance['widget']['settings']['widget']['fivestar_widget'] : 'default';
     $widget = array(
-      'name' => isset($widgets['active']) ? strtolower($widgets[$active]) : 'default',
+      'name' => isset($widgets[$active]) ? strtolower($widgets[$active]) : 'default',
       'css' => $active,
     );
 
