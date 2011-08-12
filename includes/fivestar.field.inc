@@ -49,10 +49,10 @@ function fivestar_field_settings_form($field, $instance) {
   $axis = substr($field['field_name'], 6);
   $form['axis'] = array(
     '#type' => 'textfield',
-    '#title' => 'Voting Tag',
+    '#title' => 'Voting Category',
     '#disabled' => TRUE,
     '#value' => $axis,
-    '#description' => t('Fivestar fields automatically create a corresponding "voting tag". This is only relevant if you are using other Drupal voting modules to collect votes about the same thing.'),
+    '#description' => t('This field is used to count votes.  It cannot be edited.'),
   );
 
   return $form;
