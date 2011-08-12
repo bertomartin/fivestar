@@ -19,6 +19,9 @@ function fivestar_field_info() {
   );
 }
 
+/**
+ * Implements hook_FORM_ID_form_alter().
+ */
 function fivestar_form_field_ui_field_edit_form_alter(&$form, $form_state) {
   $field = $form['#field'];
   $instance = $form['#instance'];
@@ -72,6 +75,11 @@ function fivestar_field_instance_settings_form($field, $instance) {
     '#return_value' => 1,
   );
 
+  /*
+  // TODO. Hide target settings on field settings.
+  // - This feature should be moved into it's own Fivestar extras module
+  // - We need to come up with a consistent and intuitive way to expose this feature to users.
+  //   as-is it's very powerful, but also very confusing.
   $options = fivestar_get_targets($field, $instance);
   $form['target'] = array(
     '#title' => t('Voting target'),
@@ -81,6 +89,7 @@ function fivestar_field_instance_settings_form($field, $instance) {
     '#description' => t('The voting target will make the value of this field cast a vote on another node. Use node reference fields module to create advanced reviews. Use the Parent Node Target when using fivestar with comments. More information available on the <a href="http://drupal.org/handbook/modules/fivestar">Fivestar handbook page</a>.'),
     '#access' => (count($options) > 1 && $instance['widget']['type'] != 'exposed'),
   );
+  // */
   
   return $form;
 }
