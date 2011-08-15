@@ -483,6 +483,19 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
     '#theme_wrappers' => array('container'),
   );
 
+  // Determine if we are going to display stars, rating or percentage.
+  $formatter = $display['type'];
+  if ($formatter == 'fivestar_formatter_percentage' || $formatter == 'fivestar_formatter_rating') {
+    $element[0]['user'] = array(
+      '#theme' => $formatter,
+      '#instance_settings' => $instance['settings'],
+      '#display_settings' => $settings,
+      '#item' => $values,
+    );
+    // No stars to display. Our work here is done.
+    return $element;
+  }
+
   // Determine which sets of stars are going to be displayed.
   // Options:
   // - Only show average of all votes.
