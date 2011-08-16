@@ -353,17 +353,22 @@ function fivestar_field_formatter_settings_form($field, $instance, $view_mode, $
   );
   
   if ($instance['widget']['type'] == 'exposed') {
-    $entity_info = entity_get_info($instance['entity_type']);
-    // Include "Default" in the list of view modes to match the ones displayed
-    // to the user; see field_ui_menu().
-    $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view modes'];
-    $bundles = field_info_bundles($instance['entity_type']);
+    $display_name = _fivestar_get_view_mode_label($instance, $view_mode);
+    if (empty($display_name)) {
+      $options = array(
+        t('Disallow Fivestar voting on this display.'),
+        t('Allow Fivestar voting on this display.'),
+      );
+    }
+    else {
+      $options = array(
+        t('Disallow Fivestar voting on @display.', array('@display' => $display_name)),
+        t('Allow Fivestar voting on @display.', array('@display' => $display_name)),
+      );
+    }
     $element['expose'] = array(
       '#type' => 'radios',
-      '#options' => array(
-        t('Disallow Fivestar voting on @display.', array('@display' => $view_modes[$view_mode]['label'], '@type' => $bundles[$instance['bundle']]['label'])),
-        t('Allow Fivestar voting on @display.', array('@display' => $view_modes[$view_mode]['label'], '@type' => $bundles[$instance['bundle']]['label'])),
-      ),
+      '#options' => $options,
       '#default_value' => $settings['expose'],
       '#return_value' => 1
     );
@@ -394,6 +399,26 @@ function fivestar_field_formatter_settings_form($field, $instance, $view_mode, $
   );
 
   return $element;
+}
+
+/**
+ * Helper function to get the label for the current view mode.
+ */
+function _fivestar_get_view_mode_label($instance, $view_mode) {
+    // Retrieve a list of view modes on this entity
+    $entity_info = entity_get_info($instance['entity_type']);
+    if (empty($entity_info)) {
+      // Views calls this form with an instance of 'ctools' and a view mode
+      // of '_dummy', in which case there will be no matching entity info.
+      return;
+    }
+    else {
+      // Include "Default" in the list of view modes to match the ones displayed
+      // to the user; see field_ui_menu().
+      $view_modes = array('default' => array('label' => t('Default'))) + $entity_info['view modes'];
+      return $view_modes[$view_mode]['label'];
+    }
+
 }
 
 /**
