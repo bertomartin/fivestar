@@ -714,7 +714,7 @@ function _fivestar_get_widget($widgets, $display, $instance) {
       // (which is the same as nothing). 
       $fivestar_widget = 'default';
     }
-    else if ($type == 'stars') {
+    elseif ($type == 'stars' && isset($instance['widget']['settings']['widget']['fivestar_widget'])) {
       // Stars rated while editing, that is, $type = stars, 
       // falls back on whatever the user selected to be displayed on node/add and node/%/edit
       $fivestar_widget = $instance['widget']['settings']['widget']['fivestar_widget'];
