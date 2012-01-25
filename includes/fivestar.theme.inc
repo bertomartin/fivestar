@@ -113,7 +113,7 @@ function theme_fivestar_formatter_default($variables) {
     'widget' => $element['#widget'],
   );
   $star_display = theme('fivestar_static', $variables);
-  return theme('fivestar_static_element', array('description' => $element['#description'], 'star_display' => $star_display, 'is_form' => FALSE));
+  return theme('fivestar_static_element', array('description' => $element['#description'], 'star_display' => $star_display));
 }
 
 /**
@@ -240,9 +240,11 @@ function theme_fivestar_static($variables) {
  *   A themed HTML string representing the star widget.
  */
 function theme_fivestar_summary($variables) {
+  $microdata = $variables['microdata'];
   extract($variables, EXTR_SKIP);
   $output = '';
   $div_class = '';
+  $average_rating_microdata = '';
   if (isset($user_rating)) {
     $div_class = isset($votes) ? 'user-count' : 'user';
     $user_stars = round(($user_rating * $stars) / 100, 1);
@@ -254,7 +256,10 @@ function theme_fivestar_summary($variables) {
   if (isset($average_rating)) {
     $div_class = isset($votes) ? 'average-count' : 'average';
     $average_stars = round(($average_rating * $stars) / 100, 1);
-    $output .= '<span class="average-rating">'. t('Average: <span>!stars</span>', array('!stars' => $average_stars)) .'</span>';
+    if (!empty($microdata['average_rating']['#attributes'])) {
+      $average_rating_microdata = drupal_attributes($microdata['average_rating']['#attributes']);
+    }
+    $output .= '<span class="average-rating">'. t('Average: <span !microdata>!stars</span>', array('!stars' => $average_stars, '!microdata' => $average_rating_microdata)) .'</span>';
   }
   if (isset($user_rating) && isset($average_rating)) {
     $div_class = 'combo';
